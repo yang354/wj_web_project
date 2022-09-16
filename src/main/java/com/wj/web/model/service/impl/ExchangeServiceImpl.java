@@ -7,12 +7,15 @@ import com.wj.web.model.entity.Exchange;
 import com.wj.web.model.dao.ExchangeMapper;
 import com.wj.web.model.service.ExchangeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wj.web.model.service.GiftCardService;
 import com.wj.web.util.ResultCode;
 import com.wj.web.vo.add.ExchangeAddVO;
 import com.wj.web.vo.query.ExchangeQueryVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 /**
  * <p>
@@ -25,6 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class ExchangeServiceImpl extends ServiceImpl<ExchangeMapper, Exchange> implements ExchangeService {
+
+    @Autowired
+    GiftCardService service;
+
     @Override
     public IPage<Exchange> getExchanges(IPage<Exchange> page, ExchangeQueryVO exchangeQueryVO) {
         QueryWrapper<Exchange> wrapper = new QueryWrapper<>();
@@ -40,6 +47,17 @@ public class ExchangeServiceImpl extends ServiceImpl<ExchangeMapper, Exchange> i
         int index = baseMapper.insert(exchange);
         if (index==0){
             throw new MyException(ResultCode.ERROR,"添加一条兑换失败");
+        }
+        if(!ObjectUtils.isEmpty(exchange)){
+            if (exchange.getId()!=null){
+                exchangeAddVO.getGiftCards().stream().forEach(item->{
+                    item.setExchangeId(exchange.getId());
+                });
+            }
+            boolean b = service.saveBatch(exchangeAddVO.getGiftCards());
+            if(!b){
+                throw new MyException(ResultCode.ERROR,"添加礼品卡失败");
+            }
         }
     }
 

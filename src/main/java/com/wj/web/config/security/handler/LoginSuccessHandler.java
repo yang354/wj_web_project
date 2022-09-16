@@ -40,7 +40,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         User user = (User) authentication.getPrincipal(); //消除循环引用
         //生成token
         String token = jwtUtils.generateToken(user);
-        //System.out.println(token);
+//        System.out.println(token);
 
 
         //把生成的token存到redis

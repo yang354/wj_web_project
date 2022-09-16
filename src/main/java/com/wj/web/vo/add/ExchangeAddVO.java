@@ -1,6 +1,9 @@
 package com.wj.web.vo.add;
 
+import com.wj.web.model.entity.GiftCard;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ExchangeAddVO {
@@ -43,4 +46,9 @@ public class ExchangeAddVO {
      * 礼品卡id
      */
     private Integer giftCardId;
+
+    /**
+     * 礼品卡集合
+     */
+    private List<GiftCard> giftCards;
 }

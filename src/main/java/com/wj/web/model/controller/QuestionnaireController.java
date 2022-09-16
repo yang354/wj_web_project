@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author yyyz
  * @since 2022-09-15
  */
-@Api(value = "问卷管理",tags = "问卷管理",description = "问卷管理")
+@Api(value = "问卷管理", tags = "问卷管理", description = "问卷管理")
 @RestController
 @RequestMapping("/api/questionnaire")
 public class QuestionnaireController {
@@ -43,14 +43,13 @@ public class QuestionnaireController {
     @ApiOperation("查问卷详情")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "token", required = false),
-            @ApiImplicitParam(value = "问卷Id",name = "questionnaireId",dataType = "Integer")
+            @ApiImplicitParam(value = "问卷Id", name = "questionnaireId", dataType = "Integer")
     })
     @PostMapping("/getLawUserById")
     public Result getLawUserById(Integer questionnaireId) {
-         Questionnaire questionnaire = questionnaireService.getQuestionnaireById(questionnaireId);
+        Questionnaire questionnaire = questionnaireService.getQuestionnaireById(questionnaireId);
         return Result.ok(questionnaire).msg("获取一篇问卷详情成功");
     }
-
 
 
     /**
@@ -61,7 +60,7 @@ public class QuestionnaireController {
      */
     @ApiOperation("获取问卷列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "获取问卷列表",name = "questionnaireQueryVO",dataType = "QuestionnaireQueryVO"),
+            @ApiImplicitParam(value = "获取问卷列表", name = "questionnaireQueryVO", dataType = "QuestionnaireQueryVO"),
             @ApiImplicitParam(paramType = "header", name = "token", required = false)
     })
     @PostMapping("/list")
