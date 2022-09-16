@@ -49,14 +49,16 @@ public class ExchangeServiceImpl extends ServiceImpl<ExchangeMapper, Exchange> i
             throw new MyException(ResultCode.ERROR,"添加一条兑换失败");
         }
         if(!ObjectUtils.isEmpty(exchange)){
-            if (exchange.getId()!=null){
-                exchangeAddVO.getGiftCards().stream().forEach(item->{
-                    item.setExchangeId(exchange.getId());
-                });
-            }
-            boolean b = service.saveBatch(exchangeAddVO.getGiftCards());
-            if(!b){
-                throw new MyException(ResultCode.ERROR,"添加礼品卡失败");
+            if(exchangeAddVO.getGiftCards() !=null && exchangeAddVO.getGiftCards().size()!=0){
+                if (exchange.getId()!=null){
+                    exchangeAddVO.getGiftCards().stream().forEach(item->{
+                        item.setExchangeId(exchange.getId());
+                    });
+                }
+                boolean b = service.saveBatch(exchangeAddVO.getGiftCards());
+                if(!b){
+                    throw new MyException(ResultCode.ERROR,"添加礼品卡失败");
+                }
             }
         }
     }
