@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80028
 File Encoding         : 65001
 
-Date: 2022-09-16 11:54:18
+Date: 2022-09-18 15:23:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,12 +32,16 @@ CREATE TABLE `wj_exchange` (
   `end_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '目的地邮箱',
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '收款码',
   `gift_card_id` int NOT NULL COMMENT '礼品卡id',
+  `create_user` bigint NOT NULL COMMENT '创建人',
+  `update_user` bigint NOT NULL COMMENT '修改人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of wj_exchange
 -- ----------------------------
+INSERT INTO `wj_exchange` VALUES ('1', 'string', 'string', 'string', null, null, '0', '0', 'string', 'string', 'string', '0', '0', '0');
+INSERT INTO `wj_exchange` VALUES ('5', 'string', 'string', 'string', null, null, '0', '0', 'string', 'string', 'string', '0', '38', '38');
 
 -- ----------------------------
 -- Table structure for wj_gift_card
@@ -54,11 +58,13 @@ CREATE TABLE `wj_gift_card` (
   `facevalue` int DEFAULT NULL COMMENT '面值',
   `exchange_id` int DEFAULT NULL COMMENT '兑换id',
   PRIMARY KEY (`gift_card_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Records of wj_gift_card
 -- ----------------------------
+INSERT INTO `wj_gift_card` VALUES ('1', '0', 'string', 'string', 'string', 'string', '2022-09-16 00:00:00', '0', '1');
+INSERT INTO `wj_gift_card` VALUES ('5', '0', 'string', 'string', 'string', 'string', '2022-09-18 00:00:00', '0', '5');
 
 -- ----------------------------
 -- Table structure for wj_questionnaire
@@ -78,7 +84,6 @@ CREATE TABLE `wj_questionnaire` (
 -- Records of wj_questionnaire
 -- ----------------------------
 INSERT INTO `wj_questionnaire` VALUES ('1', '问卷调查', '5', '前20名', 'http://dfsaf.com', '2022-09-15 11:52:24');
-INSERT INTO `wj_questionnaire` VALUES ('2', '问卷3', '20', '前5名', 'http://dsada.com', '2022-09-16 10:34:08');
 
 -- ----------------------------
 -- Table structure for wj_user

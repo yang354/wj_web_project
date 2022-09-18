@@ -51,4 +51,6 @@ public class ExchangeAddVO {
      * 礼品卡集合
      */
     private List<GiftCard> giftCards;
+
+
 }

@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExchangeController {
 
     @Autowired
-    private ExchangeService exchangeService;
+    ExchangeService exchangeService;
 
 
     /**
