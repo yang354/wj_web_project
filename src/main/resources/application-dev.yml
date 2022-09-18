@@ -71,6 +71,7 @@ secure:
   ignored:
     urls: #安全路径白名单
       #      - /**
+      - /
       - /api/user/login
       - /swagger-ui.html
       - /swagger-resources/**
@@ -79,10 +80,13 @@ secure:
       - /**/*.js
       - /**/*.css
       - /**/*.png
+      - /**/*.jpg
+      - /**/*.svg
       - /**/*.ico
       - /webjars/**
       - /druid/**
-      - /static/qrcode/**
+      - /static/**
+      - /templates/**
 
 
 
