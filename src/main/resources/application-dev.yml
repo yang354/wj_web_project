@@ -84,7 +84,10 @@ secure:
       - /druid/**
       - /static/qrcode/**
 
-
+minio:
+  url: http://localhost:9000  #对象存储服务的URL
+  accessKey: admin  #账户
+  secretKey: 12345678 #密码
 
 
 
