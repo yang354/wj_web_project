@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta link="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+
+    <link rel="stylesheet" href="@{/elementui/css/index.css}">
+    <link rel="stylesheet" href="@{/css/main.css}">
+    <style>
+        .iframeclass {
+            border: 0px;
+            height: 90%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="main-max-app">
+    <div class="top-content">
+        <div class="top-left">
+            当前系统<strong class="time-line">1.0</strong>版本，剩余时间<strong class="time-line">{{count}}</strong>
+        </div>
+        <div class="top-bgimg">
+            <div class="title-line">
+                <span class="title-h1">享出海问卷系统</span>
+            </div>
+        </div>
+        <div class="top-right">
+            <div class="block" style="vertical-align: middle;">
+                <el-avatar :size="40" :src="circleUrl"></el-avatar>
+            </div>
+            <div>
+                <span>郭言章</span>
+            </div>
+            <!-- <div class="padding-line"><i class="el-icon-refresh"></i></div> -->
+        </div>
+    </div>
+    <div id="main-content">
+        <div class="cnt-left">
+            <div class="map-div">
+                <div class="inform-div">
+                    <span style="color: rgba(22, 93, 247, 0.74);">系统通知：</span>
+                    <span>恭喜--来自泸州的丁*克签约享出海个人版</span>
+                </div>
+                <iframe scrolling="false" class="iframeclass" src="map.html"></iframe>
+            </div>
+            <div class="versions-div">
+                <span style="color: darkorange;">旗舰版：</span>
+                <div class="flagship-number versions-number">4</div>
+                <span style="color: yellow;">团队版：</span>
+                <div class="team-number versions-number">9</div>
+                <span style="color: yellowgreen;">个人版：</span>
+                <div class="personal-number versions-number">236</div>
+            </div>
+            <div class="map-bottom">
+                <div class="map-btm-left map-btm-div">
+                    <div id="he-plugin-standard" style="border-radius: 5px !important"></div>
+                </div>
+                <div class="map-btm-right map-btm-div">
+                    <span style="color: rgba(22, 93, 247, 0.932);font-weight: bold;">重要提示</span>
+                    <div style="text-align: left;">
+                        北京时间阿萨JFK ask妇女咖啡碱撒大寄卡升级的垃圾的骄傲疯狂沙发空间咖啡机咖啡机放假啊离开房间啊看风景反垃圾发卡机
+                    </div>
+                    <div class="today-time">
+                        <!--2019-01-01 10:10:10-->{{currentTime}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="cnt-right">
+            <div class="cnt-right-top">
+                <div class="btn-left">
+                    <div class="btn-changeline">
+                        <div>回收兑换</div>
+                    </div>
+                    <div class="btn-right-content">
+                        <div class="hexagon-img"><img src="@{/images/WechatIMG137.png}" height="180px" alt=""></div>
+                    </div>
+                </div>
+                <div class="btn-right">
+                    <div class="btn-changeline">
+                        <div>新手教程</div>
+                    </div>
+                    <div class="btn-right-content">
+                        <div class="hexagon-img">
+                            <img src="@{/image/hex1.png}" height="180px" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cnt-right-content">
+                <el-table class="eltable1" :data="tableData" stripe ref="table" border max-height="500px" :cell-style="eltable1Style" :header-cell-style="eltable1HeaderStyle">
+                    <el-table-column type="index" label="序号" width="99">
+                    </el-table-column>
+                    <el-table-column prop="createTime" label="日期" width="150">
+                    </el-table-column>
+                    <el-table-column prop="content" label="地址" width="348">
+                    </el-table-column>
+                    <el-table-column label="金额" width="80">
+                        <template slot-scope="scope">${{scope.row.money}}</template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="150">
+                        <template slot-scope="scope">
+                            <el-button type="" size="default" @click="showDialog(scope.row)">查看详情</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="list-question" @click="toList">所有问卷列表</div>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both;"></div>
+    <!-- 底部div -->
+    <div id="main-bottom">
+        底部
+    </div>
+
+    <el-dialog title="问卷详细" :visible.sync="showDialogFlag" width="30%">
+        <div>
+            <ul class="detail-dialog-ul">
+                <li>
+                    <span>金额：</span>
+                    <el-input v-model="question.money" style="width: 100px;"></el-input>
+                    <span style="margin-left: 20px;">发布时间：</span>
+                    <el-input v-model="question.createTime" style="width: 150px;"></el-input>
+                </li>
+                <li>
+                    <span>链接：</span>
+                    <el-input v-model="question.link" style="width: 350px;"></el-input>
+                </li>
+                <li>
+                    <span>备注：</span>
+                    <el-input type="textarea" :rows="3" style="width: 350px;" v-model="question.remarks">
+                    </el-input>
+                </li>
+                <li>
+                    <span>内容：</span>
+                    <el-input type="textarea" :rows="5" style="width: 350px;" v-model="question.content">
+                    </el-input>
+                </li>
+            </ul>
+        </div>
+        <span slot="footer">
+                <el-button>复制内容</el-button>
+                <el-button>复制链接</el-button>
+            </span>
+    </el-dialog>
+
+
+
+</div>
+<script src="@{/js/jquery-1.12.4.js}"></script>
+<script src="@{/js/vue.js}"></script>
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script src="@{/elementui/js/index.js}"></script>
+
+<script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
+<script>
+    WIDGET = {
+        "CONFIG": {
+            "layout": "1",
+            "width": "400",
+            "height": "210",
+            "background": "1",
+            "dataColor": "FFFFFF",
+            "borderRadius": "10px",
+            "key": "7d7c67b0336946eb8226a32159208e2a"
+        }
+    }
+
+    new Vue({
+        el: "#main-max-app",
+        data() {
+            return {
+                currentTime: "",
+                count: '', //倒计时
+                seconds: 1728000, // 20天的秒数
+                circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+                content: "",
+                showDialogFlag: false,
+                tableData: [],
+                question: {},
+            }
+        },
+        methods: {
+            eltable1Style(
+                column,
+            ) {
+                if (column.columnIndex == 0) {
+                    return "color:chartreuse;!important"
+                }
+                if (column.columnIndex == 3) {
+                    return "color:darkorange;!important"
+                }
+                return "color:#fff;"
+            },
+            eltable1HeaderStyle(column) {
+                if (column.columnIndex == 0) {
+                    return "color:chartreuse;!important"
+                }
+                if (column.columnIndex == 3) {
+                    return "color:darkorange;!important"
+                }
+                return "color:#fff;"
+            },
+            showDialog(val) {
+                if (this.showDialogFlag) {
+                    this.showDialogFlag = false;
+                } else {
+                    this.showDialogFlag = true;
+                    // console.log(val);
+                    this.question = val;
+                }
+            },
+            tableScroll() {
+                const table = this.$refs.table;
+                const divData = table.bodyWrapper;
+                setInterval(() => {
+                    divData.scrollTop += 1;
+                    if (divData.clientHeight + divData.scrollTop == divData.scrollHeight) {
+                        divData.scrollTop = 0;
+                    }
+                }, 30)
+            },
+            toList() {
+                window.location.href = "http://localhost:5500/Listui.html"
+            },
+            // 天 时 分 秒 格式化函数
+            countDown() {
+                let d = parseInt(this.seconds / (24 * 60 * 60))
+                d = d < 10 ? "0" + d : d
+                let h = parseInt(this.seconds / (60 * 60) % 24);
+                h = h < 10 ? "0" + h : h
+                let m = parseInt(this.seconds / 60 % 60);
+                m = m < 10 ? "0" + m : m
+                let s = parseInt(this.seconds % 60);
+                s = s < 10 ? "0" + s : s
+                this.count = d + '天' + h + '时' + m + '分' + s + '秒'
+            },
+            //定时器每过1秒参数减1
+            Time() {
+                setInterval(() => {
+                    this.seconds -= 1
+                    this.countDown();
+                    this.getCurrentTime();
+                }, 1000)
+            },
+            getCurrentTime() {
+                let yy = new Date().getFullYear();
+                let mm = new Date().getMonth() + 1 < 10 ? '0' + (new Date().getMonth() + 1) : new Date().getMonth() + 1;
+                let dd = new Date().getDate() + 1 < 10 ? '0' + new Date().getdate() : new Date().getDate();
+                let hh = new Date().getHours() + 1 < 10 ? '0' + new Date().getHours() : new Date().getHours();
+                let mf = new Date().getMinutes() + 1 < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+                let ss = new Date().getSeconds() + 1 < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+                this.currentTime = yy + "-" + mm + "-" + dd + " " + hh + ":" + mf + ":" + ss;
+            },
+            getQuestionList() {
+                let _this = this;
+                // console.log(JSON.stringify(page));
+                $.ajax({
+                    url: "http://localhost:9999/api/questionnaire/list",
+                    type: "post",
+                    headers: {
+                        token: "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjM4MjY3MzAsInN1YiI6ImFkbWluIiwiaWF0IjoxNjYzODI0OTMwMjQzfQ.tS86aVIkLAmUZ-Oy7OAWp_LRNLYfXWzS6FbXcRBBRfpa-naEJeicnI0b8Gw_p86BbvAIy9IHSugQ8laVCFWnqw"
+                    },
+                    contentType: "application/json",
+                    data: JSON.stringify({}),
+                    dataType: "json",
+                    success(res) {
+                        console.log(res);
+                        if (res.code == 0) {
+                            _this.tableData = res.result.records;
+                        }
+                    }
+
+                })
+            },
+        },
+        mounted() {
+            this.tableScroll();
+            this.Time(); //调用定时器
+        },
+        created() {
+            this.getQuestionList();
+        }
+    })
+</script>
+</body>
+
+</html>

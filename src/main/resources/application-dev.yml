@@ -70,13 +70,15 @@ jwt:
 secure:
   ignored:
     urls: #安全路径白名单
-      #      - /**
-      - /
+      - /**
+#      - /
       - /api/user/login
       - /swagger-ui.html
       - /swagger-resources/**
       - /swagger/**
       - /v2/**
+      - /static/**
+      - /templates/**
       - /**/*.js
       - /**/*.css
       - /**/*.png
@@ -85,8 +87,7 @@ secure:
       - /**/*.ico
       - /webjars/**
       - /druid/**
-      - /static/**
-      - /templates/**
+      - /main
 
 
 
