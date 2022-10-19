@@ -1,23 +1,29 @@
 server:
   port: 9999
 
+#videoIconLocation: D:\ruoyi1
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.139.97.61:3306/ry-vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.1.6:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+    password: admin
+#    url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: xiangchuhai123
+#    password: root
   jackson:  #JSON日期格式化
-    date-format: yyyy-MM-dd hh:mm:ss
+    date-format: yyyy-MM-dd
     time-zone: Asia/Shanghai
   mvc:  #日期格式化
     format:
       date: yyyy-MM-dd
       date-time: yyyy-MM-dd HH:mm:ss
+#    static-path-pattern: /**
+#  resources:
+#    static-locations: classpath:/static/,file:${videoIconLocation}
   ################################# Redis相关配置 #################################
   redis:
-    host: 43.139.97.61
+    host: localhost
     port: 6379
     database: 0
     timeout: 10000
@@ -54,7 +60,7 @@ mybatis-plus:
 
 
 logging:
-  config: classpath:logback2.xml
+  config: classpath:logback.xml
 
 
 
@@ -63,13 +69,13 @@ logging:
 #密钥
 jwt:
   secret: com.qft
-  expiration: 86400000
+  expiration: 1800000
 
 
 secure:
   ignored:
     urls: #安全路径白名单
-      #      - /**
+#      - /**
       - /
       - /api/user/login
       - /swagger-ui.html
@@ -87,7 +93,12 @@ secure:
       - /**/*.ico
       - /webjars/**
       - /druid/**
-      - /main
-      - /list
-      - /change
+#      - /main
+#      - /list
+#      - /change
+
+
+
+
+
 

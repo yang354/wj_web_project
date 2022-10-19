@@ -1,0 +1,141 @@
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    /* overflow: hidden; */
+}
+
+li {
+    list-style: none;
+}
+
+#main-app {
+    padding: 30px;
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    color: #fff;
+    height: 875px;
+    display: flex;
+    flex-direction: column;
+}
+
+.question-line li {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.flex-item1 div {
+    display: inline-block;
+}
+
+.flex-item1-2 {
+    float: right;
+}
+
+.color-chartreuse {
+    color: chartreuse;
+}
+
+.color-darkorange {
+    color: darkorange;
+}
+
+#select-page {
+    background-color: #1e9fff;
+}
+
+.content-bottom {
+    margin-top: 10px;
+}
+
+.content-bottom div {
+    display: inline-block;
+}
+
+.cnt-btm-left {
+    font-weight: bold;
+}
+
+.cnt-btm-right {
+    float: right;
+}
+
+.current-page {
+    margin: 0px 5px;
+    font-weight: bold;
+}
+
+.el-dropdown {
+    vertical-align: top;
+}
+
+.el-dropdown+.el-dropdown {
+    margin-left: 15px;
+}
+
+.el-icon-arrow-down {
+    font-size: 12px;
+}
+
+.detail-dialog-ul li {
+    margin-bottom: 10px;
+}
+
+.el-table {
+    background-color: transparent !important;
+    border: rgb(40, 118, 193) 1px solid;
+    border-bottom: none;
+}
+
+.cell{
+    max-height: 70px !important;
+    /*overflow: auto !important;*/
+}
+
+.el-table th {
+    background-color: transparent !important;
+}
+
+.el-table tr {
+    background-color: transparent !important;
+}
+
+.el-table td {
+    background-color: transparent !important;
+}
+
+.el-table--enable-row-transition .el-table__body td,
+.el-table .cell {
+    text-align: center;
+    background-color: transparent;
+    /* height: 30px; */
+}
+
+.el-button {
+    background-color: transparent !important;
+    color: #fff !important;
+}
+
+.el-dialog {
+    background-color: rgba(4, 39, 82, 0.87) !important;
+}
+
+.el-input__inner {
+    background-color: transparent !important;
+    color: #fff !important;
+}
+
+.el-textarea__inner {
+    background-color: transparent !important;
+    color: #fff !important;
+}
+
+.el-dialog__body {
+    color: #fff !important;
+}
+
+.el-dialog__title {
+    color: #fff !important;
+}

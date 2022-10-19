@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.web.model.dao.ExchangeMapper">
+
+    <resultMap id="BaseResultMap" type="com.wj.web.model.entity.Exchange">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="payee" column="payee" jdbcType="VARCHAR"/>
+            <result property="payment" column="payment" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="dealTime" column="deal_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="money" column="money" jdbcType="INTEGER"/>
+            <result property="startEmail" column="start_email" jdbcType="VARCHAR"/>
+            <result property="endEmail" column="end_email" jdbcType="VARCHAR"/>
+            <result property="code" column="code" jdbcType="VARCHAR"/>
+            <result property="giftCardId" column="gift_card_id" jdbcType="INTEGER"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+            <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+            <result property="delFlag" column="del_flag" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,payee,payment,
+        phone,create_time,deal_time,
+        status,money,start_email,
+        end_email,code,gift_card_id,
+        create_user,update_user,del_flag
+    </sql>
+</mapper>

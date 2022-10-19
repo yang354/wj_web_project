@@ -1,0 +1,71 @@
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    color: #fff;
+}
+
+#main {
+    width: 100%;
+    height: 925px;
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    padding-top: 10px;
+}
+
+.el-table,
+.el-table__expanded-cell {
+    background-color: transparent !important;
+}
+
+#content,
+.flex-item1 {
+    margin: 0px 20px;
+}
+
+
+/* 表格内背景颜色 */
+
+.el-table th,
+.el-table tr,
+.el-table td {
+    background-color: transparent !important;
+}
+
+.table-wrapper .el-table td .cell {
+    color: #fff !important;
+}
+
+.table-wrapper .el-table th .cell {
+    color: #fff !important;
+}
+
+.el-dialog {
+    background-color: rgba(40, 40, 40, 0.7) !important;
+}
+
+.el-input__inner {
+    background-color: rgba(65, 65, 65, 0.3);
+    color: #fff;
+    border: 1px solid #ffffff;
+}
+
+.el-select-dropdown__item {
+    font-size: 7px;
+    line-height: 19px;
+    color: #afafaf;
+    font-weight: 200;
+    background-color: #565656;
+}
+
+.el-select-dropdown {
+    background-color: rgba(50, 50, 50, 0.3);
+    border: 1px solid blue;
+}
+
+.cell{
+    max-height: 70px !important;
+    /*overflow: auto !important;*/
+}

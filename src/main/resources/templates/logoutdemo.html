@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<link rel="shortcut icon" th:href="@{/images/titleimg.jpg}" type="image/x-icon">
+		<title>享出海问卷调查</title>
+	</head>
+	<body>
+		<button class="logClick">点击</button>
+
+		<script th:src="@{/utils/jquery-1.12.4.js}"></script>
+	<script>
+		// window.location.href = "/";
+		$().ready(function (){
+
+			let item = window.localStorage.getItem("token");
+			// alert(item)
+			$(".logClick").click(function (){
+				$.ajax({
+					url:"/api/user/logout",
+					headers:{token:item},
+					type:"post",
+					success(res){
+						alert("用户退出成功")
+						window.localStorage.clear();
+						let cleartoken = window.localStorage.getItem("token");
+						alert(cleartoken);
+					}
+				})
+			})
+		})
+
+
+		// var token = window.localStorage.getItem("token");
+		// alert(token);
+	</script>
+	</body>
+</html>
+
