@@ -10,11 +10,13 @@
         <result column="remarks" property="remarks" />
         <result column="link" property="link" />
         <result column="create_time" property="createTime" />
+        <result property="delFlag" column="del_flag" jdbcType="CHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, content, money, remarks, link, create_time
+        id, content, money, remarks, link, create_time,del_flag
     </sql>
 
 </mapper>

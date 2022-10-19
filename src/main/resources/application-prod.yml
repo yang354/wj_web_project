@@ -1,3 +1,93 @@
 server:
-  port: 8888
+  port: 9999
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.139.97.61:3306/ry-vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: xiangchuhai123
+  jackson:  #JSON日期格式化
+    date-format: yyyy-MM-dd hh:mm:ss
+    time-zone: Asia/Shanghai
+  mvc:  #日期格式化
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+  ################################# Redis相关配置 #################################
+  redis:
+    host: 43.139.97.61
+    port: 6379
+    database: 0
+    timeout: 10000
+    #自定义属性
+    expire: 60000
+
+
+
+    #设置缓存组件类型
+  cache:
+    type: redis
+    #设置缓存过期时间  防止缓存雪崩：大量key同时过期
+    redis:
+      time-to-live: 3600000
+      #指定默认前缀，如果此处我们指定了前缀则使用我们指定的前缀，推荐此处不指定前缀
+      #spring.cache.redis.key-prefix=CACHE_
+      #是否开始前缀，建议开启
+      use-key-prefix: true
+      #是否缓存空值，防止缓存穿透
+      cache-null-values: true
+
+
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+
+
+
+logging:
+  config: classpath:logback2.xml
+
+
+
+
+#jwt配置
+#密钥
+jwt:
+  secret: com.qft
+  expiration: 1800000
+
+
+secure:
+  ignored:
+    urls: #安全路径白名单
+      #      - /**
+      - /
+      - /api/user/login
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /v2/**
+      - /static/**
+      - /templates/**
+      - /**/map.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.jpg
+      - /**/*.svg
+      - /**/*.ico
+      - /webjars/**
+      - /druid/**
+      - /main
+      - /list
+      - /change
 

@@ -1,8 +1,10 @@
 package com.wj.web.model.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wj.web.config.redis.RedisService;
 import com.wj.web.vo.query.QuestionnaireQueryVO;
 import com.wj.web.model.entity.Questionnaire;
 import com.wj.web.model.service.QuestionnaireService;
@@ -12,10 +14,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -30,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/questionnaire")
 public class QuestionnaireController {
 
-    @Autowired
+    @Resource
     private QuestionnaireService questionnaireService;
 
 
@@ -69,8 +72,18 @@ public class QuestionnaireController {
         IPage<Questionnaire> page = new Page<Questionnaire>(questionnaireQueryVO.getPageNo(), questionnaireQueryVO.getPageSize());
         //调用分页查询方法
         questionnaireService.getQuestionnaires(page, questionnaireQueryVO);
-        //返回数据
         return Result.ok(page);
     }
+
+//    @Resource
+//    RedisService redisService;
+//
+//    @GetMapping("/testcache")
+//    public Result testcache(){
+//        //questionnaires::getQuestionnaires
+//        Object s = redisService.get("questionnaires::getQuestionnaires");
+//        System.out.println(s);
+//        return Result.ok(s);
+//    }
 }
 

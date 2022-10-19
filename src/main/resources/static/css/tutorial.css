@@ -1,0 +1,8 @@
+html,body{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    color: #fff;
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+}

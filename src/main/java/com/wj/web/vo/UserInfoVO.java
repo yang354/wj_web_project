@@ -10,9 +10,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoVO implements Serializable {
-    private Long id;//用户ID
+    private Long userId;//用户ID
     private String username;//用户名称
-    private String avatar;//头像
+    private String photo;//头像
     private String phone;//手机号
 
 

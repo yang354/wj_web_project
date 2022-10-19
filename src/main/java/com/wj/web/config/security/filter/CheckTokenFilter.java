@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -49,7 +50,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
             this.validateToken(request);
 
         } catch (AuthenticationException e) {
-            loginFailureHandler.onAuthenticationFailure(request, response, e);
+//            loginFailureHandler.onAuthenticationFailure(request, response, e);
         }
 
         //登录请求不需要验证token

@@ -14,11 +14,12 @@
             <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
             <result property="facevalue" column="facevalue" jdbcType="INTEGER"/>
             <result property="exchangeId" column="exchange_id" jdbcType="INTEGER"/>
+            <result property="delFlag" column="del_flag" jdbcType="CHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         gift_card_id,gift_card_type,area,
         cardcode,code,cvv,
-        createtime,facevalue,exchange_id
+        createtime,facevalue,exchange_id,del_flag
     </sql>
 </mapper>

@@ -48,5 +48,14 @@ public class Questionnaire implements Serializable {
     @TableField(fill = FieldFill.INSERT)  //自动填充
     private Date createTime;
 
+    /**
+     *删除标志（0代表存在 2代表删除）
+     */
+    private String delFlag;
+
+    /**
+     * 题目类型 （0所有题目 1必给题目 2邮件题目 3抽奖题目 ）
+     */
+    private Integer type;
 
 }

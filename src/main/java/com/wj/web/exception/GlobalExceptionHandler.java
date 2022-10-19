@@ -3,6 +3,7 @@ package com.wj.web.exception;
 
 
 
+import com.wj.web.config.security.exception.CustomerAuthenticationException;
 import com.wj.web.util.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
 
     //指定出现什么异常执行这个方法
     @ExceptionHandler(Exception.class)

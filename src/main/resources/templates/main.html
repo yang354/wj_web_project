@@ -5,23 +5,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta link="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <link rel="shortcut icon" th:href="@{/images/titleimg.jpg}" type="image/x-icon">
+    <title>享出海问卷调查</title>
+     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 
-    <link rel="stylesheet" href="@{/elementui/css/index.css}">
-    <link rel="stylesheet" href="@{/css/main.css}">
+<!--    <link rel="stylesheet" th:href="@{/elementui/css/index.css}">-->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Homemade+Apple&family=Sacramento&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
+
+    <script th:src="@{/js/jquery-1.12.4.js}"></script>
+    <script th:src="@{/js/vue.js}"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--<script th:src="@{/elementui/js/index.js}"></script>-->
+    <!--<script th:src="@{/js/listenToken}"></script>-->
+    <script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
+
     <style>
         .iframeclass {
             border: 0px;
-            height: 90%;
-            width: 100%;
             overflow: hidden;
+            width: 800px;
+            height: 500px;
+        }
+        .wv-top-select {
+            color: #fff !important;
+            background-color: rgba(0, 110, 255, 0.144);
+        }
+
+        .wv-top-button {
+            color: #fff !important;
+            background-color: rgba(0, 110, 255, 0.144) !important;
         }
     </style>
 
 </head>
 
 <body>
+<!--<div class="loading-div">-->
+<!--    <svg viewBox="0 20 1000 300">-->
+<!--        <text x="0" y="70%"> Loading... </text>-->
+<!--    </svg>-->
+<!--</div>-->
+
+
 <div id="main-max-app">
     <div class="top-content">
         <div class="top-left">
@@ -34,30 +62,42 @@
         </div>
         <div class="top-right">
             <div class="block" style="vertical-align: middle;">
-                <el-avatar :size="40" :src="circleUrl"></el-avatar>
+                <el-avatar :size="40" :src="user.photo"></el-avatar>
+<!--                <el-avatar :size="40" th:v-bind:src="|'@{'+user.avatar+'}'|"></el-avatar>-->
+<!--                <el-avatar :size="40" th:src="@{/titleimg.jpg}"></el-avatar>-->
             </div>
-            <div>
-                <span>郭言章</span>
+            <div class="username-class">
+                <span v-show="user.username!=''||user.username!=null||user.username!=undefined">{{user.username}}</span>
             </div>
-            <!-- <div class="padding-line"><i class="el-icon-refresh"></i></div> -->
+             <div class="padding-line" @click="logout"><i class="el-icon-close"></i></div>
         </div>
     </div>
     <div id="main-content">
         <div class="cnt-left">
             <div class="map-div">
                 <div class="inform-div">
-                    <span style="color: rgba(22, 93, 247, 0.74);">系统通知：</span>
-                    <span>恭喜--来自泸州的丁*克签约享出海个人版</span>
+<!--                    <span style="color: rgba(22, 93, 247, 0.74);">系统通知：</span>-->
+<!--                    <span>恭喜&#45;&#45;来自泸州的丁*克签约享出海个人版</span>-->
+                    <div class="container">
+                        <div class="tagline">
+                                <span class="change-container">
+                                    <span class="changing" v-for="item in infospanList">
+                                        <span style="color: rgba(22, 93, 247, 0.74);">系统通知：</span>
+                                        恭喜--来自泸州的{{item.username}}签约享出海团队版
+                                </span>
+                                </span>
+                        </div>
+                    </div>
                 </div>
-                <iframe scrolling="false" class="iframeclass" src="map.html"></iframe>
+                <iframe scrolling="false" class="iframeclass" th:src="@{/html/map.html}"></iframe>
             </div>
             <div class="versions-div">
-                <span style="color: darkorange;">旗舰版：</span>
-                <div class="flagship-number versions-number">4</div>
-                <span style="color: yellow;">团队版：</span>
-                <div class="team-number versions-number">9</div>
-                <span style="color: yellowgreen;">个人版：</span>
-                <div class="personal-number versions-number">236</div>
+                <span style="color: red;">旗舰版：</span>
+                <div class="flagship-number versions-number">6</div>
+                <span style="color: darkorange;">团队版：</span>
+                <div class="team-number versions-number">12</div>
+                <span style="color: yellow;">个人版：</span>
+                <div class="personal-number versions-number">3</div>
             </div>
             <div class="map-bottom">
                 <div class="map-btm-left map-btm-div">
@@ -65,8 +105,8 @@
                 </div>
                 <div class="map-btm-right map-btm-div">
                     <span style="color: rgba(22, 93, 247, 0.932);font-weight: bold;">重要提示</span>
-                    <div style="text-align: left;">
-                        北京时间阿萨JFK ask妇女咖啡碱撒大寄卡升级的垃圾的骄傲疯狂沙发空间咖啡机咖啡机放假啊离开房间啊看风景反垃圾发卡机
+                    <div style="text-align: left;text-indent: 30px;" v-html="importantInfo()">
+<!--                        北京时间2022年10月1日为中国国庆节，属国家的法定节假日，全中放七天。-->
                     </div>
                     <div class="today-time">
                         <!--2019-01-01 10:10:10-->{{currentTime}}</div>
@@ -75,50 +115,51 @@
         </div>
         <div class="cnt-right">
             <div class="cnt-right-top">
-                <div class="btn-left">
-                    <div class="btn-changeline">
+                <div class="btn-left" @click="toChange">
+                    <div  class="btn-changeline">
                         <div>回收兑换</div>
                     </div>
                     <div class="btn-right-content">
-                        <div class="hexagon-img"><img src="@{/images/WechatIMG137.png}" height="180px" alt=""></div>
+                        <div class="hexagon-img"><img th:src="@{/images/WechatIMG137.png}" height="180px" alt=""></div>
                     </div>
                 </div>
-                <div class="btn-right">
+                <div class="btn-right" @click="toTutorial">
                     <div class="btn-changeline">
                         <div>新手教程</div>
                     </div>
                     <div class="btn-right-content">
                         <div class="hexagon-img">
-                            <img src="@{/image/hex1.png}" height="180px" alt="">
+                            <img th:src="@{/images/hex1.png}" height="180px" alt="">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="cnt-right-content">
-                <el-table class="eltable1" :data="tableData" stripe ref="table" border max-height="500px" :cell-style="eltable1Style" :header-cell-style="eltable1HeaderStyle">
-                    <el-table-column type="index" label="序号" width="99">
+                <el-table class="eltable1" :data="tableData" stripe ref="table" border max-height="500px" :row-style="iRowStyle" :cell-style="eltable1Style" :header-cell-style="eltable1HeaderStyle">
+                    <el-table-column type="index" label="序号" width="69">
                     </el-table-column>
-                    <el-table-column prop="createTime" label="日期" width="150">
+                    <el-table-column prop="createTime" label="日期" width="180">
                     </el-table-column>
-                    <el-table-column prop="content" label="地址" width="348">
+                    <el-table-column prop="content" label="内容" width="360">
                     </el-table-column>
                     <el-table-column label="金额" width="80">
                         <template slot-scope="scope">${{scope.row.money}}</template>
                     </el-table-column>
-                    <el-table-column label="操作" width="150">
+                    <el-table-column label="操作" width="180">
                         <template slot-scope="scope">
                             <el-button type="" size="default" @click="showDialog(scope.row)">查看详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="list-question" @click="toList">所有问卷列表</div>
+                <div class="list-question"  @click="toList">所有问卷列表</div>
+<!--                :style="tableData?'width: 830px':'width: 867px'"-->
             </div>
         </div>
     </div>
     <div style="clear: both;"></div>
     <!-- 底部div -->
     <div id="main-bottom">
-        底部
+        copyright &copy; 2022~2050 品优实业 版权所有
     </div>
 
     <el-dialog title="问卷详细" :visible.sync="showDialogFlag" width="30%">
@@ -126,42 +167,45 @@
             <ul class="detail-dialog-ul">
                 <li>
                     <span>金额：</span>
-                    <el-input v-model="question.money" style="width: 100px;"></el-input>
+                    <el-input v-model="question.money" readonly style="width: 100px;"></el-input>
                     <span style="margin-left: 20px;">发布时间：</span>
-                    <el-input v-model="question.createTime" style="width: 150px;"></el-input>
+                    <el-input v-model="question.createTime" readonly style="width: 150px;"></el-input>
                 </li>
                 <li>
                     <span>链接：</span>
-                    <el-input v-model="question.link" style="width: 350px;"></el-input>
+                    <el-input v-model="question.link" readonly style="width: 350px;"></el-input>
                 </li>
                 <li>
                     <span>备注：</span>
-                    <el-input type="textarea" :rows="3" style="width: 350px;" v-model="question.remarks">
+                    <el-input type="textarea" :rows="3" readonly style="width: 350px;" v-model="question.remarks">
                     </el-input>
                 </li>
                 <li>
                     <span>内容：</span>
-                    <el-input type="textarea" :rows="5" style="width: 350px;" v-model="question.content">
+                    <el-input type="textarea" :rows="5" readonly style="width: 350px;" v-model="question.content">
                     </el-input>
                 </li>
             </ul>
         </div>
         <span slot="footer">
-                <el-button>复制内容</el-button>
-                <el-button>复制链接</el-button>
+                <el-button @click="copyContent(question.content)">复制内容</el-button>
+                <el-button @click="copyUrl(question.link)">复制链接</el-button>
             </span>
     </el-dialog>
 
 
 
 </div>
-<script src="@{/js/jquery-1.12.4.js}"></script>
-<script src="@{/js/vue.js}"></script>
-<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
-<script src="@{/elementui/js/index.js}"></script>
 
-<script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
+<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+
 <script>
+    // document.onreadystatechange = function() {
+    //     if (document.readyState == "complete") {
+    //         $(".loading-div").hide();
+    //     }
+    // }
+
     WIDGET = {
         "CONFIG": {
             "layout": "1",
@@ -174,18 +218,29 @@
         }
     }
 
+
     new Vue({
         el: "#main-max-app",
         data() {
             return {
                 currentTime: "",
                 count: '', //倒计时
-                seconds: 1728000, // 20天的秒数
-                circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+                seconds: 0, // 20天的秒数1728000
                 content: "",
                 showDialogFlag: false,
                 tableData: [],
                 question: {},
+                user:{},
+                infospanList: [],
+                importantInfo(){
+                    let date = new Date();
+                    const year = date.getFullYear();
+                    const mouth = date.getMonth()+1;
+                    const day = date.getDate();
+                    let week = "日一二三四五六".charAt(date.getDay());
+                    let today="当前北京时间是"+year+"年"+mouth+"月"+day+"日，星期"+week+"</br>欢迎使用享出海问卷系统！";
+                    return today;
+                }
             }
         },
         methods: {
@@ -193,16 +248,19 @@
                 column,
             ) {
                 if (column.columnIndex == 0) {
-                    return "color:chartreuse;!important"
+                    return "color:rgb(255, 196, 0);!important;padding:0"
                 }
                 if (column.columnIndex == 3) {
-                    return "color:darkorange;!important"
+                    return "color:darkorange;!important;padding:0"
                 }
-                return "color:#fff;"
+                return "color:#fff;padding:0"
+            },
+            iRowStyle(){
+                return 'height:35px';
             },
             eltable1HeaderStyle(column) {
                 if (column.columnIndex == 0) {
-                    return "color:chartreuse;!important"
+                    return "color:rgb(255, 196, 0);!important"
                 }
                 if (column.columnIndex == 3) {
                     return "color:darkorange;!important"
@@ -229,7 +287,13 @@
                 }, 30)
             },
             toList() {
-                window.location.href = "http://localhost:5500/Listui.html"
+                window.location.href = "/list?token="+window.localStorage.getItem("token");
+            },
+            toChange(){
+                window.location.href = "/change?token="+window.localStorage.getItem("token");
+            },
+            toTutorial(){
+                window.location.href = "/tutorial?token="+window.localStorage.getItem("token");
             },
             // 天 时 分 秒 格式化函数
             countDown() {
@@ -254,40 +318,162 @@
             getCurrentTime() {
                 let yy = new Date().getFullYear();
                 let mm = new Date().getMonth() + 1 < 10 ? '0' + (new Date().getMonth() + 1) : new Date().getMonth() + 1;
-                let dd = new Date().getDate() + 1 < 10 ? '0' + new Date().getdate() : new Date().getDate();
+                let dd = new Date().getDate() + 1 < 10 ? '0' + new Date().getDate() : new Date().getDate();
                 let hh = new Date().getHours() + 1 < 10 ? '0' + new Date().getHours() : new Date().getHours();
                 let mf = new Date().getMinutes() + 1 < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
                 let ss = new Date().getSeconds() + 1 < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
                 this.currentTime = yy + "-" + mm + "-" + dd + " " + hh + ":" + mf + ":" + ss;
             },
+            //获取下个月第一天0点
+            getSeconds(){
+                let yy = new Date().getFullYear();
+                let mm = new Date().getMonth() + 2 < 10 ? '0' + (new Date().getMonth() + 2) : new Date().getMonth() + 2;
+                let firstmouth = yy + "-" + mm + "-" + "01 00:00:00";
+                this.seconds = new Date(firstmouth).valueOf() / 1000 - new Date().valueOf() / 1000;
+            },
             getQuestionList() {
                 let _this = this;
                 // console.log(JSON.stringify(page));
                 $.ajax({
-                    url: "http://localhost:9999/api/questionnaire/list",
+                    url: "/api/questionnaire/list",
                     type: "post",
                     headers: {
-                        token: "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjM4MjY3MzAsInN1YiI6ImFkbWluIiwiaWF0IjoxNjYzODI0OTMwMjQzfQ.tS86aVIkLAmUZ-Oy7OAWp_LRNLYfXWzS6FbXcRBBRfpa-naEJeicnI0b8Gw_p86BbvAIy9IHSugQ8laVCFWnqw"
+                        token: window.localStorage.getItem("token")
                     },
                     contentType: "application/json",
                     data: JSON.stringify({}),
                     dataType: "json",
+                    beforeSend(){
+                        NProgress.start();
+                    },
                     success(res) {
-                        console.log(res);
+                        // console.log(res);
+                        NProgress.done();
                         if (res.code == 0) {
                             _this.tableData = res.result.records;
+                        }else{
+                            alert("登录过期，请重新登录");
+                            window.location.href = "/";
                         }
                     }
 
                 })
             },
+            getUserInfo(){
+                let _this = this;
+                $.ajax({
+                    url:"/api/user/getInfo",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    dataType: "json",
+                    success(res) {
+                        // console.log(res);
+                        if (res.code == 0) {
+                            _this.user = res.result;
+                            // console.log(_this.user);
+                            window.localStorage.setItem("user",res.result);
+                        }else{
+                            alert("登录过期，请重新登录");
+                            window.location.href = "/";
+                        }
+                    }
+                })
+            },
+            getUsers(){
+                let _this = this;
+                $.ajax({
+                    url:"/api/user/list",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    dataType: "json",
+                    success(res) {
+                        // console.log(res);
+                        if (res.code == 0) {
+                            _this.infospanList = res.result.records;
+                            // console.log(_this.infospanList)
+                        }else{
+                            alert("登录过期，请重新登录");
+                            window.location.href = "/";
+                        }
+                    }
+                })
+            },
+            tenTimt(){
+                let _this = this;
+                setInterval(() => {
+                    _this.getUsers();
+                }, 1000 * 60 * 10)
+            },
+            logout(){
+                // alert("退出登录");
+                this.$message("退出登录");
+                $.ajax({
+                    url:"/api/user/logout",
+                    type:"post",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    dataType: "json",
+                    success(res) {
+                        // console.log(res);
+                        window.localStorage.removeItem("token");
+                        window.location.href = "/";
+                    }
+                })
+            },
+            copyUrl(link){
+                var domUrl = document.createElement("input");
+                domUrl.value = link;
+                domUrl.id = "creatDom";
+                document.body.appendChild(domUrl);
+                domUrl.select();
+                document.execCommand("Copy");
+                let creatDom = document.getElementById("creatDom");
+                creatDom.parentNode.removeChild(creatDom);
+                return this.$message.success("链接复制成功！");
+            },
+            copyContent(content){
+                var domUrl = document.createElement("input");
+                domUrl.value = content;
+                domUrl.id = "creatContDom";
+                document.body.appendChild(domUrl);
+                domUrl.select();
+                document.execCommand("Copy");
+                let creatDom = document.getElementById("creatContDom");
+                creatDom.parentNode.removeChild(creatDom);
+                return this.$message.success("内容复制成功！");
+            }
         },
         mounted() {
             this.tableScroll();
             this.Time(); //调用定时器
+            this.tenTimt();
+
+            window.addEventListener("click", e => {
+                let tokenTime = window.localStorage.getItem("tokenTime");
+                let now = new Date().getTime();
+                if(tokenTime){
+                    // console.log(tokenTime)
+                    let timeDifference = (now - Number(tokenTime));
+                    // console.log(timeDifference);
+                    if(timeDifference >= 0){
+                        this.$message("重新登录");
+                        window.location.href="/";
+                        return;
+                    }
+                }else{
+                    this.$message("未登录");
+                    window.location.href="/";
+                }
+            });
         },
         created() {
             this.getQuestionList();
+            this.getUserInfo();
+            this.getUsers();
+            this.getSeconds();
         }
     })
 </script>

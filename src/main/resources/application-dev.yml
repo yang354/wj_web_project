@@ -1,14 +1,16 @@
 server:
   port: 9999
 
-
+#videoIconLocation: D:\ruoyi1
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wj_project?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.1.6:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+    password: admin
+#    url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+#    password: root
   jackson:  #JSON日期格式化
     date-format: yyyy-MM-dd
     time-zone: Asia/Shanghai
@@ -16,6 +18,9 @@ spring:
     format:
       date: yyyy-MM-dd
       date-time: yyyy-MM-dd HH:mm:ss
+#    static-path-pattern: /**
+#  resources:
+#    static-locations: classpath:/static/,file:${videoIconLocation}
   ################################# Redis相关配置 #################################
   redis:
     host: localhost
@@ -70,8 +75,8 @@ jwt:
 secure:
   ignored:
     urls: #安全路径白名单
-      - /**
-#      - /
+#      - /**
+      - /
       - /api/user/login
       - /swagger-ui.html
       - /swagger-resources/**
@@ -79,6 +84,7 @@ secure:
       - /v2/**
       - /static/**
       - /templates/**
+      - /**/map.html
       - /**/*.js
       - /**/*.css
       - /**/*.png
@@ -87,7 +93,9 @@ secure:
       - /**/*.ico
       - /webjars/**
       - /druid/**
-      - /main
+#      - /main
+#      - /list
+#      - /change
 
 
 

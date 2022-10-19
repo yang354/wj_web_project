@@ -68,6 +68,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().disable();
 
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
 
@@ -81,9 +82,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //登录前进行过滤
         http.formLogin()  //表单登录
                 .loginProcessingUrl("/api/user/login")  //登录请求url地址，自定义即可
+                .loginPage("/")
                 // 设置登录验证成功或失败后的的跳转地址
                 .successHandler(loginSuccessHandler)  //认证成功处理器
                 .failureHandler(loginFailureHandler) //认证失败处理器
+                .usernameParameter("userName")
                 // 禁用csrf防御机制
                 .and().csrf().disable()
                 //不创建session
@@ -97,7 +100,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 //匿名无权限访问   就是表示你没有登录访问资源会触发
-                .authenticationEntryPoint(anonymousAuthenticationHandler)
+//                .authenticationEntryPoint(anonymousAuthenticationHandler)
                 .and().cors();//开启跨域配置
     }
 

@@ -1,7 +1,11 @@
 package com.wj.web.model.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wj.web.config.redis.RedisService;
+import com.wj.web.model.entity.Questionnaire;
 import com.wj.web.model.entity.User;
 import com.wj.web.model.service.UserService;
 import com.wj.web.util.JwtUtils;
@@ -28,6 +32,10 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -41,8 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
-    @Resource
+@Resource
     private UserService userService;
     @Resource
     private RedisService redisService;
@@ -82,6 +89,9 @@ public class UserController {
         }
         //获取用户信息
         User user = (User) authentication.getPrincipal();
+//        System.out.println(user.toString());
+//        String substring = user.getAvatar().substring(7);
+//        user.setAvatar("/var/lib/docker/overlay2/08d0c3985cccc4e50c5cd56164176dc21d7f5729a9ca2b538366f9d08893e0b4/diff/home/ruoyi/uploadPath"+substring);
 
         //创建用户信息对象
         UserInfoVO userInfo = new UserInfoVO();
@@ -169,5 +179,23 @@ public class UserController {
         return Result.ok().msg("用户退出成功");
     }
 
+    /**
+     * 获取问卷列表
+     *
+     * @return
+     */
+    @ApiOperation("获取用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "token", required = false)
+    })
+    @GetMapping("/list")
+    public Result list() {
+        //创建分页对象
+        IPage<User> page = new Page<User>(1, 5);
+        //调用分页查询方法
+        userService.getUsers(page);
+        //返回数据
+        return Result.ok(page);
+    }
 }
 

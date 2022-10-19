@@ -4,25 +4,31 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.wj.web.model.entity.User">
-        <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="is_account_non_expired" property="isAccountNonExpired" />
-        <result column="is_account_non_locked" property="isAccountNonLocked" />
-        <result column="is_credentials_non_expired" property="isCredentialsNonExpired" />
-        <result column="is_enabled" property="isEnabled" />
-        <result column="gender" property="gender" />
-        <result column="phone" property="phone" />
+        <id column="user_id" property="userId" />
+        <result column="dept_id" property="deptId" />
+        <result column="user_name" property="userName" />
+        <result column="nick_name" property="nickName" />
+        <result column="user_type" property="userType" />
         <result column="email" property="email" />
+        <result column="phonenumber" property="phonenumber" />
+        <result column="sex" property="sex" />
         <result column="avatar" property="avatar" />
+        <result column="password" property="password" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="login_ip" property="loginIp" />
+        <result column="login_date" property="loginDate" />
+        <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
         <result column="update_time" property="updateTime" />
-        <result column="is_delete" property="isDelete" />
+        <result column="remark" property="remark" />
+        <result column="photo" property="photo" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, is_account_non_expired, is_account_non_locked, is_credentials_non_expired, is_enabled, gender, phone, email, avatar, create_time, update_time, is_delete
+        user_id, dept_id, user_name, nick_name, user_type, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, photo
     </sql>
 
 </mapper>

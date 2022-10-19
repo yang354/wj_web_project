@@ -55,7 +55,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         //
         HashMap<String, Object> data = new HashMap<>();
-        data.put("id",user.getId());
+        data.put("id",user.getUserId());
         data.put("expireTime",expireTime);
         data.put("token",token);
 

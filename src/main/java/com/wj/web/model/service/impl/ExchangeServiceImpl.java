@@ -19,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.Resource;
+import java.util.Calendar;
+
 /**
  * @author JT
  * @description 针对表【wj_exchange】的数据库操作Service实现
@@ -27,12 +30,13 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class ExchangeServiceImpl extends ServiceImpl<ExchangeMapper, Exchange>
         implements ExchangeService {
-    @Autowired
+    @Resource
     GiftCardService service;
 
     @Override
     public IPage<Exchange> getExchanges(IPage<Exchange> page, ExchangeQueryVO exchangeQueryVO) {
         QueryWrapper<Exchange> wrapper = new QueryWrapper<>();
+        wrapper.eq("del_flag",0);
         wrapper.orderByAsc("id");
         return baseMapper.selectPage(page, wrapper);
     }
@@ -45,8 +49,9 @@ public class ExchangeServiceImpl extends ServiceImpl<ExchangeMapper, Exchange>
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //获取用户信息
         User user = (User) authentication.getPrincipal();
-        exchange.setCreateUser(user.getId());
-        exchange.setUpdateUser(user.getId());
+        exchange.setCreateUser(user.getUserId());
+        exchange.setUpdateUser(user.getUserId());
+        exchange.setDealTime(Calendar.getInstance().getTime());
         int index = baseMapper.insert(exchange);
         if (index == 0) {
             throw new MyException(ResultCode.ERROR, "添加一条兑换失败");

@@ -39,7 +39,8 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         }else if(exception instanceof LockedException){
             message = "账户被锁,登录失败!";
         }else if(exception instanceof InternalAuthenticationServiceException){
-            message = "账户不存在,登录失败!";
+            //message = "账户不存在,登录失败!";
+            message = exception.getMessage();
         } else if (exception instanceof CustomerAuthenticationException) {  //获取token过滤器的错误信息
             message = exception.getMessage();
             code = 600;
@@ -51,4 +52,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         outputStream.write(result.getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
         outputStream.close();
-    } }
+
+    }
+}

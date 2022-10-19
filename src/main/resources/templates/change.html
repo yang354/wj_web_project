@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/titleimg.jpg}" type="image/x-icon">
+    <title>享出海问卷调查</title>
+
+    <link rel="stylesheet" th:href="@{/css/change.css}">
+<!--    <link rel="stylesheet" href="./css/a.less">-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!--    <link rel="stylesheet" th:href="@{/elementui/css/index.css}">-->
+
+    <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
+
+    <script th:src="@{/js/jquery-1.12.4.js}"></script>
+    <script th:src="@{/js/vue.js}"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--    <script th:src="@{/elementui/js/index.js}"></script>-->
+    <style>
+        .el-dialog__body {
+            padding: 30px 20px;
+            color: #0055ff;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .el-dialog__header {
+            color: #0055ff;
+            font-weight: bold;
+        }
+
+        .el-form-item__label {
+            color: #004de7;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="main">
+    <h2 align="center">回收兑换</h2>
+    <div class="flex-item1">
+        <el-button type="text" @click="handleAdd()">提交兑换 </el-button>
+        <div align="right">
+            <el-button type="default" icon="el-icon-refresh-right" @click="currentPage(1)" circle></el-button>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="table-wrapper">
+            <el-table class="eltable1" :data="tableData" border style="width: 100%;" :header-cell-style="{background:'transparent',color:'#fff'}">
+                <!-- <el-table :data="tableData" style="width: 100%" height="250"> -->
+                <el-table-column type="index" label="序号" width="100"></el-table-column>
+                <el-table-column prop="payee" label="收款人"></el-table-column>
+                <el-table-column prop="payment" label="收款方式">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.payment==1">微信</template>
+                        <template v-else>支付宝</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="phone" label="收款人电话"></el-table-column>
+                <el-table-column prop="createTime" label="提交时间"></el-table-column>
+                <el-table-column prop="dealTime" label="处理时间"></el-table-column>
+                <el-table-column label="处理状态">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==1">已处理</template>
+                        <template v-else>未处理</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="money" label="打款金额"></el-table-column>
+                <el-table-column label="操作" width="200">
+                    <template slot-scope="scope">
+                        <el-button type="text">查看详情</el-button>
+                        <el-button type="text"></el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <div class="content-bottom">
+            <el-pagination align="right" :current-page.sync="page.current" @current-change="currentPage" background layout="prev, pager, next" :total="page.pages*10">
+            </el-pagination>
+        </div>
+    </div>
+    <div class="dialog-wrapper">
+        <el-dialog :modal="false" class="showTable" style="overflow: hidden;" :visible.sync="dialogFormVisible">
+            <el-button type="text" style="color: #0055ff;">提交兑换 </el-button>
+            <el-form :model="form">
+                <el-form-item label="收 款 人:" :label-width="formLabelWidth">
+                    <el-input v-model="form.payee" style="width: 340px;">
+                    </el-input>
+                    <span>&nbsp;收款方式：</span>
+                    <el-select v-model="form.payment" placeholder="请选择" style="width: 340px;">
+                        <el-option label="微信" value="shanghai"></el-option>
+                        <el-option label="支付宝" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="收款电话:" :label-width="formLabelWidth">
+                    <el-input v-model="form.phone" style="width: 340px;"></el-input>
+                    <span>&nbsp;&nbsp;收 款 码：</span>
+                    <el-input v-model="form.code" style="width: 340px;">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="发件邮箱:" :label-width="formLabelWidth">
+                    <el-input v-model="form.startEmail" style="width: 340px;"></el-input>
+                    <span>&nbsp;&nbsp;发 送 至：</span>
+                    <el-input placeholder="2061305691@qq.com" v-model="form.endEmail" aria-disabled="true" style="width: 340px;">
+                    </el-input>
+                </el-form-item>
+                <div class="input-group">
+                    <el-button type="text" @click="addCard()">添加礼品卡</el-button>
+                    <el-button type="text" @click="addbatchCard">批量添加礼品卡</el-button>
+                    <el-button type="text">模板下载</el-button>
+                </div>
+                <div class="provinceScreen">
+                    <el-table :data="tableData1" :max-height="400" @row-dblclick="dblclick" :row-style="{height:'70px'}" :cell-class-name="tableCellClassName" border stripe>
+                        <el-table-column prop="giftCardType" label="礼品卡" width="100">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.giftCardType" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.giftCardType}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="area" label="地区" width="80">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.area" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.area}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="cardcode" label="卡密或卡号" width="88">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.cardcode" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.cardcode}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="code" label="编号(星巴克必填)" width="100">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.code" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.code}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="code" label="编号(星巴克必填)" width="100">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.code" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.code}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="cvv" label="CVV(香草VISA必填)" width="100">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.cvv" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.cvv}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="createtime" label="日期(香草VISA必填)" width="180">
+                            <template slot-scope="scope">
+                                <el-input type="date" @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.createtime" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.createtime}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="facevalue" label="面值" width="70">
+                            <template slot-scope="scope">
+                                <el-input @blur="hideInput" :ref="scope.row.index+','+scope.column.index" v-model="scope.row.facevalue" v-if="scope.row.index+','+scope.column.index==currentCell"></el-input>
+                                <span v-else>{{scope.row.facevalue}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="100">
+                            <template slot-scope="scope">
+                                <el-button @click="removeData(scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                </div>
+                <el-form-item align="center">
+                    <el-button type="text" @click="submitExchange()">提交兑换 </el-button>
+                </el-form-item>
+            </el-form>
+
+        </el-dialog>
+    </div>
+
+    
+</div>
+<!--<script th:src="@{/js/jquery-1.12.4.js}"></script>-->
+<!--<script th:src="@{/js/vue.js}"></script>-->
+<!--&lt;!&ndash;<script src="https://unpkg.com/element-ui/lib/index.js"></script>&ndash;&gt;-->
+<!--<script th:src="@{/elementui/js/index.js}"></script>-->
+
+<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    new Vue({
+        el: "#main",
+        data() {
+            return {
+                content: "",
+                modal: '',
+                showDialogFlag: false,
+                tableData: [],
+                dialogFormVisible: false,
+                formLabelWidth: '120px',
+                form: {
+                    money: 0,
+                    createTime: new Date(),
+                    giftCardId: 0,
+                },
+                question: {},
+                tableData1: [],
+                page: {
+                    pages: 1
+                },
+                pageVO: {
+                    pageNo: 1,
+                    pageSize: 10
+                },
+                currentCell: null,
+            }
+        },
+        methods: {
+            handleAdd() {
+                this.dialogFormVisible = true;
+            },
+            addCard() {
+                let data = {
+                    giftCardType: '星巴克',
+                    area: 'Designer',
+                    cardcode: "44",
+                    code: "22",
+                    cvv: 'Guangzhou',
+                    createtime: '2020-08-20',
+                    facevalue: 10
+                };
+                this.tableData1.push(data);
+            },
+            addbatchCard() {
+                let data = [{
+                    giftCardType: '星巴克',
+                    area: 'Designer',
+                    cardcode: "44",
+                    code: "22",
+                    cvv: 'Guangzhou',
+                    createtime: '2020-08-20',
+                    facevalue: 10
+                }, {
+                    giftCardType: '香草VISA',
+                    area: 'Designer',
+                    cardcode: "44",
+                    code: "22",
+                    cvv: 'Guangzhou',
+                    createtime: '2020-08-20',
+                    facevalue: 15
+                }];
+                this.tableData1 = [...this.tableData1, ...data];
+            },
+            removeData(row) {
+                let index = this.tableData1.indexOf(row);
+                this.tableData1.splice(index, 1);
+            },
+            getChangeList() {
+                let _this = this;
+                $.ajax({
+                    url: "/api/exchange/list",
+                    type: "post",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    data: JSON.stringify(_this.pageVO),
+                    contentType: "application/json",
+                    success(res) {
+                        console.log(res)
+                        if (res.code == 0) {
+                            _this.page = res.result;
+                            _this.tableData = res.result.records;
+                        }else{
+                            window.location.href = "/";
+                        }
+                    }
+                })
+            },
+            submitExchange() {
+                let _this = this;
+                if (this.tableData1.length != 0) {
+                    this.tableData1.map(item => {
+                        if (item.giftCardType == "星巴克") {
+                            item.giftCardType = 1;
+                        } else if (item.giftCardType == "亚马逊") {
+                            item.giftCardType = 2;
+                        } else if (item.giftCardType == "VISA") {
+                            item.giftCardType = 3;
+                        } else if (item.giftCardType == "香草VISA") {
+                            item.giftCardType = 4;
+                        } else {
+                            item.giftCardType = 5;
+                        }
+                    })
+                    this.form.giftCards = this.tableData1;
+                }
+                $.ajax({
+                    url: "/api/exchange/add",
+                    type: "post",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    data: JSON.stringify(_this.form),
+                    contentType: "application/json",
+                    success(res) {
+                        // console.log(res)
+                        if (res.code == 0) {
+                            _this.getChangeList();
+                        }else{
+                            alert("登录过期，请重新登录");
+                            window.location.href = "/";
+                        }
+                        _this.form = {
+                            money: 0,
+                                createTime: new Date(),
+                                giftCardId: 0,
+                        }
+                        _this.dialogFormVisible = false;
+                    }
+                })
+            },
+            currentPage(val) {
+                // alert(val);
+                this.pageVO.pageNo = val;
+                this.getChangeList(this.pageVO);
+            },
+            tableCellClassName({
+                                   row,
+                                   column,
+                                   rowIndex,
+                                   columnIndex
+                               }) {
+                row.index = rowIndex;
+                column.index = columnIndex;
+            },
+            dblclick(row, column) {
+                this.currentCell = row.index + "," + column.index;
+                setTimeout(() => {
+                    this.$refs[row.index + "," + column.index].focus();
+                })
+            },
+            hideInput() {
+                this.currentCell = null;
+            },
+        },
+        created() {
+            NProgress.done();
+            this.getChangeList(this.pageVO);
+        },
+        beforeCreate(){
+            NProgress.start();
+        }
+    })
+</script>
+</body>
+
+
+</html>

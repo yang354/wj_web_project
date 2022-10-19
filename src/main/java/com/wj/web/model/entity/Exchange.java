@@ -1,9 +1,7 @@
 package com.wj.web.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -39,11 +37,13 @@ public class Exchange implements Serializable {
     /**
      * 提交时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
      * 处理时间
      */
+//    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date dealTime;
 
     /**
@@ -85,6 +85,11 @@ public class Exchange implements Serializable {
      * 修改人
      */
     private Long updateUser;
+
+    /**
+     *删除标志（0代表存在 2代表删除）
+     */
+    private String delFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
