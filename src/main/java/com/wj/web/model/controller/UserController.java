@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wj.web.config.redis.RedisService;
+import com.wj.web.exception.MyException;
 import com.wj.web.model.entity.Questionnaire;
 import com.wj.web.model.entity.User;
 import com.wj.web.model.service.UserService;
 import com.wj.web.util.JwtUtils;
 import com.wj.web.util.Result;
+import com.wj.web.util.ResultCode;
 import com.wj.web.vo.TokenVO;
 import com.wj.web.vo.UserInfoVO;
 import com.wj.web.vo.UserLoginVO;
@@ -20,11 +22,15 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -34,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -56,6 +63,9 @@ public class UserController {
     @Resource
     private JwtUtils jwtUtils;
 
+    @Resource
+    private AuthenticationManager authenticationManager;
+
     /**
      * 登录
      *
@@ -63,10 +73,51 @@ public class UserController {
      */
     @ApiOperation("登录")
     @ApiImplicitParam(value = "登录",name = "userLoginVO",dataType = "UserLoginVO")
-    @GetMapping("/userLogin")
-    public Result userLogin(@RequestBody UserLoginVO userLoginVO) {
+    @PostMapping("/login")
+    public Result userLogin(@Validated UserLoginVO userLoginVO) {
         // TODO: 2022/9/15
-        return Result.ok();
+        User userByPhone = userService.findUserByPhone(userLoginVO.getUsername());
+        if(userByPhone == null){
+            throw new MyException(ResultCode.ERROR, "登录账号不正确");
+        }else{
+            userLoginVO.setUsername(userByPhone.getUsername());
+        }
+
+
+        // 用户验证
+        Authentication authentication = null;
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userLoginVO.getUsername(), userLoginVO.getPassword());
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(authenticationToken);
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                throw new MyException(ResultCode.ERROR, "登录密码不正确");
+            } else {
+                throw new MyException(ResultCode.ERROR, e.getMessage());
+            }
+        }
+        User loginUser = (User) authentication.getPrincipal();
+        //生成token
+        String token = jwtUtils.generateToken(loginUser);
+
+
+        //把生成的token存到redis
+        String tokenKey = "token_" + token;
+        redisService.set(tokenKey, token, jwtUtils.getExpiration() / 1000);
+
+        //设置token签名密钥及过期时间
+        long expireTime = Jwts.parser() //获取DefaultJwtParser对象
+                .setSigningKey(jwtUtils.getSecret()) //设置签名的密钥
+                .parseClaimsJws(token.replace("jwt_", ""))  //把生成的jwt_前缀 替换为""
+                .getBody().getExpiration().getTime();//获取token过期时间
+
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("id", loginUser.getUserId());
+        data.put("expireTime", expireTime);
+        data.put("token", token);
+        return Result.ok(data);
     }
 
 

@@ -11,6 +11,7 @@ import com.wj.web.config.security.service.CustomerUserDetailsService;
 import com.wj.web.config.security.uitl.IgnoredUrlsConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -60,6 +61,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new IgnoredUrlsConfig();
 //    }
 
+    /**
+     * 解决 无法直接注入 AuthenticationManager
+     *
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 
     /**
      * 处理登录认证
@@ -81,12 +94,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //登录前进行过滤
         http.formLogin()  //表单登录
-                .loginProcessingUrl("/api/user/login")  //登录请求url地址，自定义即可
+//                .loginProcessingUrl("/api/user/login")  //登录请求url地址，自定义即可
                 .loginPage("/")
-                // 设置登录验证成功或失败后的的跳转地址
-                .successHandler(loginSuccessHandler)  //认证成功处理器
-                .failureHandler(loginFailureHandler) //认证失败处理器
-                .usernameParameter("userName")
+//                // 设置登录验证成功或失败后的的跳转地址
+//                .successHandler(loginSuccessHandler)  //认证成功处理器
+//                .failureHandler(loginFailureHandler) //认证失败处理器
+//                .usernameParameter("userName")
                 // 禁用csrf防御机制
                 .and().csrf().disable()
                 //不创建session

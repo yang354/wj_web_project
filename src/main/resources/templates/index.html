@@ -147,7 +147,7 @@
              $.ajax({
                  url:"/api/user/login",
                  type:"post",
-                 data: {userName:username,password:password},
+                 data: {username:username,password:password},
                  dataType:"json",
                  beforeSend(){
                      NProgress.start();
@@ -167,6 +167,7 @@
                          // document.testform.submit();
                          // document.testform.refresh();
                      }else{
+                         $("#login_btn_line").html("登录")
                          alert(res.msg);
                      }
                  }

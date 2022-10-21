@@ -33,6 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //创建条件构造器
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>(); //用户名
         queryWrapper.eq("user_name",username);
+        queryWrapper.eq("del_flag",0);
         //返回查询记录
         return baseMapper.selectOne(queryWrapper);
     }
@@ -42,8 +43,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.lambda().orderBy(true,true,User::getCreateTime);
         userQueryWrapper.select("user_name");
+        userQueryWrapper.eq("del_flag",0);
         return baseMapper.selectPage(page,userQueryWrapper);
     }
 
-
+    @Override
+    public User findUserByPhone(String phone) {
+        //创建条件构造器
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>(); //用户名
+        queryWrapper.eq("phonenumber",phone);
+        queryWrapper.eq("del_flag",0);
+        //返回查询记录
+        return baseMapper.selectOne(queryWrapper);
+    }
 }
