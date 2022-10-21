@@ -313,6 +313,31 @@
                     this.seconds -= 1
                     this.countDown();
                     this.getCurrentTime();
+                    console.log(this.seconds);
+                    if(this.user.userId != 1 || this.user.userId != 2){
+                        if(this.seconds <= 0){
+                            let _this = this;
+                            $.ajax({
+                                url:"/api/user/close",
+                                type:"post",
+                                headers: {
+                                    token: window.localStorage.getItem("token")
+                                },
+                                dataType: "json",
+                                data:_this.user,
+                                success(res) {
+                                    if (res.code == 0) {
+                                        alert("账号过期，已被停用！");
+                                    }else{
+                                        alert("登录过期，请重新登录");
+                                        window.location.href = "/";
+                                    }
+                                }
+                            })
+                            window.location.href="/";
+                            return;
+                        }
+                    }
                 }, 1000)
             },
             getCurrentTime() {
@@ -326,10 +351,11 @@
             },
             //获取下个月第一天0点
             getSeconds(){
-                let yy = new Date().getFullYear();
-                let mm = new Date().getMonth() + 2 < 10 ? '0' + (new Date().getMonth() + 2) : new Date().getMonth() + 2;
-                let firstmouth = yy + "-" + mm + "-" + "01 00:00:00";
-                this.seconds = new Date(firstmouth).valueOf() / 1000 - new Date().valueOf() / 1000;
+                // let yy = new Date().getFullYear();
+                // let mm = new Date().getMonth() + 2 < 10 ? '0' + (new Date().getMonth() + 2) : new Date().getMonth() + 2;
+                // let firstmouth = yy + "-" + mm + "-" + "01 00:00:00";
+                //结束时间 - 当前时间 = 倒计时时间
+                this.seconds = new Date(this.user.endTime).valueOf() / 1000 - new Date().valueOf() / 1000;
             },
             getQuestionList() {
                 let _this = this;
@@ -368,9 +394,11 @@
                     },
                     dataType: "json",
                     success(res) {
-                        // console.log(res);
+                        console.log(res);
                         if (res.code == 0) {
                             _this.user = res.result;
+                            _this.getSeconds();
+
                             // console.log(_this.user);
                             window.localStorage.setItem("user",res.result);
                         }else{
@@ -473,7 +501,6 @@
             this.getQuestionList();
             this.getUserInfo();
             this.getUsers();
-            this.getSeconds();
         }
     })
 </script>

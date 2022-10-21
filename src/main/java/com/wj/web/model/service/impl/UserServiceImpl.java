@@ -7,6 +7,8 @@ import com.wj.web.model.entity.User;
 import com.wj.web.model.dao.UserMapper;
 import com.wj.web.model.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wj.web.vo.UserInfoVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -55,5 +57,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("del_flag",0);
         //返回查询记录
         return baseMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public int closeUser(UserInfoVO userInfoVO) {
+        User user = new User();
+        BeanUtils.copyProperties(userInfoVO,user);
+        //设置停用
+        user.setStatus("1");
+        return baseMapper.updateById(user);
     }
 }

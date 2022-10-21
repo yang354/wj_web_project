@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wj.web.model.entity.Questionnaire;
 import com.wj.web.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wj.web.vo.UserInfoVO;
 
 import java.util.List;
 
@@ -36,4 +37,10 @@ public interface UserService extends IService<User> {
      * @return
      */
     User findUserByPhone(String phone);
+
+    /**
+     * 根据用户停用该用户
+     * @return
+     */
+    int closeUser(UserInfoVO userInfoVO);
 }

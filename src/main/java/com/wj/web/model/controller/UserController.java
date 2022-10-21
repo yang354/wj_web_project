@@ -38,10 +38,12 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -144,14 +146,40 @@ public class UserController {
 //        String substring = user.getAvatar().substring(7);
 //        user.setAvatar("/var/lib/docker/overlay2/08d0c3985cccc4e50c5cd56164176dc21d7f5729a9ca2b538366f9d08893e0b4/diff/home/ruoyi/uploadPath"+substring);
 
+//        redisService.get("");
         //创建用户信息对象
         UserInfoVO userInfo = new UserInfoVO();
         BeanUtils.copyProperties(user,userInfo);
 
+        userInfo.setEndTime(UserController.monthAddFrist(user.getCreateTime()));
         //UserInfo userInfo = new UserInfo(user.getId(), user.getUsername(), user.getAvatar(),user.getPhone(),userType.getTypeName());
         //返回数据
         return Result.ok(userInfo);
     }
+
+    /**
+     * 给时间加一个月
+     * @param date
+     * @return
+     */
+    public static Date monthAddFrist(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            //将Date类型 转 LocalDateTime类型
+            LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            //加一个月
+            LocalDateTime plusMonthsLocalDateTime = localDateTime.plusMonths(1);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            //转 String
+            String format = plusMonthsLocalDateTime.format(dateTimeFormatter);
+            //转 Date
+            return simpleDateFormat.parse(format);
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
 
 
     /**
@@ -247,6 +275,23 @@ public class UserController {
         userService.getUsers(page);
         //返回数据
         return Result.ok(page);
+    }
+
+    /**
+     * 根据用户id停用用户
+     * @param userInfoVO
+     * @return
+     */
+    @ApiOperation("根据用户id停用用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "token", required = false)
+    })
+    @PostMapping("/close")
+    public Result closeUser(UserInfoVO userInfoVO){
+        //调用停用方法
+        userService.closeUser(userInfoVO);
+        //返回数据
+        return Result.ok();
     }
 }
 
