@@ -34,7 +34,7 @@
 
                             <span>
                                 <form class="auth-login-form mt-2">
-                                    <div role="group" class="form-group" id="__BVID__50"><label for="login-username" class="d-block" id="__BVID__50__BV_label_">用户名</label>
+                                    <div role="group" class="form-group" id="__BVID__50"><label for="login-username" class="d-block" id="__BVID__50__BV_label_">手机号</label>
                                         <div><span><input id="login-username" name="username" type="text"
                                                     placeholder="eleui@163.com" class="form-control"><small
                                                     class="text-danger"></small></span>
@@ -160,12 +160,6 @@
                          window.localStorage.setItem("token",res.result.token);
                          window.localStorage.setItem("tokenTime",res.result.expireTime);
                          window.location.href="/main?token="+res.result.token;
-                         // var html = "<form action='/main' method='post' name='testform' style='display:none'>"
-                         //     + "<input type='hidden' name='token' value="+res.result.token+">"
-                         //     + "</form>";
-                         // document.write(html);
-                         // document.testform.submit();
-                         // document.testform.refresh();
                      }else{
                          $("#login_btn_line").html("登录")
                          alert(res.msg);

@@ -43,4 +43,9 @@ public interface UserService extends IService<User> {
      * @return
      */
     int closeUser(UserInfoVO userInfoVO);
+
+    /**
+     * 根据用户 id 添加允许用户登录的ip
+     */
+    int addUserAllowIp(User user);
 }

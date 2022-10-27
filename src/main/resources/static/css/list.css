@@ -3,6 +3,9 @@ body {
     margin: 0px;
     padding: 0px;
     /* overflow: hidden; */
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+    /*background-size: 100% 100%;*/
 }
 
 li {
@@ -11,10 +14,7 @@ li {
 
 #main-app {
     padding: 30px;
-    background-image: url("../images/bg.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-attachment: fixed;
+    /*background-attachment: fixed;*/
     color: #fff;
     height: 875px;
     display: flex;

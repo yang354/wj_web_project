@@ -9,9 +9,7 @@ import com.wj.web.exception.MyException;
 import com.wj.web.model.entity.Questionnaire;
 import com.wj.web.model.entity.User;
 import com.wj.web.model.service.UserService;
-import com.wj.web.util.JwtUtils;
-import com.wj.web.util.Result;
-import com.wj.web.util.ResultCode;
+import com.wj.web.util.*;
 import com.wj.web.vo.TokenVO;
 import com.wj.web.vo.UserInfoVO;
 import com.wj.web.vo.UserLoginVO;
@@ -48,17 +46,17 @@ import java.util.stream.Stream;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author yyyz
  * @since 2022-09-15
  */
-@Api(value = "用户管理",tags = "用户管理",description = "用户管理")
+@Api(value = "用户管理", tags = "用户管理", description = "用户管理")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-@Resource
+    @Resource
     private UserService userService;
     @Resource
     private RedisService redisService;
@@ -74,14 +72,14 @@ public class UserController {
      * @return
      */
     @ApiOperation("登录")
-    @ApiImplicitParam(value = "登录",name = "userLoginVO",dataType = "UserLoginVO")
+    @ApiImplicitParam(value = "登录", name = "userLoginVO", dataType = "UserLoginVO")
     @PostMapping("/login")
     public Result userLogin(@Validated UserLoginVO userLoginVO) {
         // TODO: 2022/9/15
         User userByPhone = userService.findUserByPhone(userLoginVO.getUsername());
-        if(userByPhone == null){
+        if (userByPhone == null) {
             throw new MyException(ResultCode.ERROR, "登录账号不正确");
-        }else{
+        } else {
             userLoginVO.setUsername(userByPhone.getUsername());
         }
 
@@ -99,7 +97,36 @@ public class UserController {
                 throw new MyException(ResultCode.ERROR, e.getMessage());
             }
         }
+
         User loginUser = (User) authentication.getPrincipal();
+
+        if (loginUser.getUserId() != 1 && loginUser.getUserId() != 2) {
+            //获取ip
+            String ipAddr = IpUtils.getIpAddr(ServletUtils.getRequest());
+            if(StringUtils.isNotEmpty(loginUser.getAllowIp()) && !ipAddr.equals(loginUser.getAllowIp())){
+                throw new MyException(ResultCode.ERROR,"该账户不能在该电脑上登录");
+            }else{
+//                String ipAddr = IpUtils.getIpAddr(ServletUtils.getRequest());
+                //给用户添加 允许登录ip
+                if(StringUtils.isEmpty(loginUser.getAllowIp())){
+                    loginUser.setAllowIp(ipAddr);
+                    userService.addUserAllowIp(loginUser);
+                }
+
+            }
+        }
+
+
+//        //查看用户是否在线
+//        System.out.println("userOnline_"+loginUser.getPhonenumber());
+//        String userOnline = redisService.get("userOnline_"+loginUser.getPhonenumber());
+//        if(!ObjectUtils.isEmpty(userOnline)){
+//            throw new MyException(ResultCode.ERROR,"该用户已经在别处登录");
+//        }
+//
+//        //储存用户在线
+//        redisService.set("userOnline_"+loginUser.getPhonenumber(),"1",jwtUtils.getExpiration() / 1000);
+
         //生成token
         String token = jwtUtils.generateToken(loginUser);
 
@@ -121,8 +148,6 @@ public class UserController {
         data.put("token", token);
         return Result.ok(data);
     }
-
-
 
 
     /**
@@ -149,9 +174,20 @@ public class UserController {
 //        redisService.get("");
         //创建用户信息对象
         UserInfoVO userInfo = new UserInfoVO();
-        BeanUtils.copyProperties(user,userInfo);
+        BeanUtils.copyProperties(user, userInfo);
+        if (userInfo.getUserId() == 1 || userInfo.getUserId() == 2) {
+            //设置管理员账户
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = simpleDateFormat.parse("2099-01-01 00:00:00");
+                userInfo.setEndTime(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            userInfo.setEndTime(UserController.monthAddFrist(user.getCreateTime()));
+        }
 
-        userInfo.setEndTime(UserController.monthAddFrist(user.getCreateTime()));
         //UserInfo userInfo = new UserInfo(user.getId(), user.getUsername(), user.getAvatar(),user.getPhone(),userType.getTypeName());
         //返回数据
         return Result.ok(userInfo);
@@ -159,12 +195,13 @@ public class UserController {
 
     /**
      * 给时间加一个月
+     *
      * @param date
      * @return
      */
-    public static Date monthAddFrist(Date date){
+    public static Date monthAddFrist(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try{
+        try {
             //将Date类型 转 LocalDateTime类型
             LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             //加一个月
@@ -174,12 +211,11 @@ public class UserController {
             String format = plusMonthsLocalDateTime.format(dateTimeFormatter);
             //转 Date
             return simpleDateFormat.parse(format);
-        }catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return new Date();
     }
-
 
 
     /**
@@ -189,7 +225,7 @@ public class UserController {
      * @return
      */
     @ApiOperation("刷新token")
-    @ApiImplicitParam(value = "请求",name = "request",dataType = "HttpServletRequest")
+    @ApiImplicitParam(value = "请求", name = "request", dataType = "HttpServletRequest")
     @PostMapping("/refreshToken")
     public Result refreshToken(HttpServletRequest request) {
         //从header中获取前端提交的token
@@ -234,8 +270,8 @@ public class UserController {
      */
     @ApiOperation("用户退出")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "请求",name = "request",dataType = "HttpServletRequest"),
-            @ApiImplicitParam(value = "响应",name = "response",dataType = "HttpServletResponse"),
+            @ApiImplicitParam(value = "请求", name = "request", dataType = "HttpServletRequest"),
+            @ApiImplicitParam(value = "响应", name = "response", dataType = "HttpServletResponse"),
             @ApiImplicitParam(paramType = "header", name = "token", required = false)
     })
     @PostMapping("/logout")
@@ -249,11 +285,16 @@ public class UserController {
         //获取用户相关信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
+            User loginUser = (User) authentication.getPrincipal();
+//            System.out.println("userOnline_"+loginUser.getPhonenumber());
+//            //清空redis里面的userOnline
+//            redisService.del("userOnline_"+loginUser.getPhonenumber());
             //清空用户信息
-            new SecurityContextLogoutHandler().logout(request, response,authentication);
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
             //清空redis里面的token
             String key = "token_" + token;
             redisService.del(key);
+
         }
         return Result.ok().msg("用户退出成功");
     }
@@ -279,6 +320,7 @@ public class UserController {
 
     /**
      * 根据用户id停用用户
+     *
      * @param userInfoVO
      * @return
      */
@@ -287,7 +329,16 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "token", required = false)
     })
     @PostMapping("/close")
-    public Result closeUser(UserInfoVO userInfoVO){
+    public Result closeUser(UserInfoVO userInfoVO) {
+        if (!ObjectUtils.isEmpty(userInfoVO)) {
+            System.out.println(userInfoVO.getUserId());
+            //管理账户不停用
+            if (userInfoVO.getUserId() == 1 || userInfoVO.getUserId() == 2) {
+                return Result.ok();
+            }
+        }
+//        //清空redis里面的userOnline
+//        redisService.del("userOnline_"+userInfoVO.getPhone());
         //调用停用方法
         userService.closeUser(userInfoVO);
         //返回数据

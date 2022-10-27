@@ -345,6 +345,26 @@
             hideInput() {
                 this.currentCell = null;
             },
+            logout(){
+                // alert("退出登录");
+                this.$message("退出登录");
+                $.ajax({
+                    url:"/api/user/logout",
+                    type:"post",
+                    headers: {
+                        token: window.localStorage.getItem("token")
+                    },
+                    dataType: "json",
+                    success(res) {
+                        // console.log(res);
+                        window.localStorage.removeItem("token");
+                        window.location.href = "/";
+                    }
+                })
+            },
+            // async unloadHandler(e) {
+            //     await this.logout();
+            // },
         },
         created() {
             NProgress.done();
@@ -352,7 +372,15 @@
         },
         beforeCreate(){
             NProgress.start();
-        }
+        },
+        // mounted() {
+        //     //监听页面关闭
+        //     window.addEventListener("unload", (e) => this.unloadHandler(e));
+        // },
+        // destroyed(){
+        //     //移除监听
+        //     window.removeEventListener("unload", (e) => this.unloadHandler(e));
+        // }
     })
 </script>
 </body>

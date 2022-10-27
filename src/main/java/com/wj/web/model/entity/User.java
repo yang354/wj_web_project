@@ -133,6 +133,11 @@ public class User implements Serializable, UserDetails {
      */
     private String photo;
 
+    /**
+     * 允许用户登录的ip
+     */
+    private String allowIp;
+
 //##########################################
     /**
      * 帐户是否过期(1-未过期，0-已过期)

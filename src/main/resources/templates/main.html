@@ -313,8 +313,7 @@
                     this.seconds -= 1
                     this.countDown();
                     this.getCurrentTime();
-                    console.log(this.seconds);
-                    if(this.user.userId != 1 || this.user.userId != 2){
+                    if(this.user.userId != 1 && this.user.userId != 2){
                         if(this.seconds <= 0){
                             let _this = this;
                             $.ajax({
@@ -394,7 +393,7 @@
                     },
                     dataType: "json",
                     success(res) {
-                        console.log(res);
+                        // console.log(res);
                         if (res.code == 0) {
                             _this.user = res.result;
                             _this.getSeconds();
@@ -472,13 +471,17 @@
                 let creatDom = document.getElementById("creatContDom");
                 creatDom.parentNode.removeChild(creatDom);
                 return this.$message.success("内容复制成功！");
-            }
+            },
+            // async unloadHandler(e) {
+            //     await this.logout();
+            // },
         },
         mounted() {
             this.tableScroll();
             this.Time(); //调用定时器
             this.tenTimt();
-
+            //监听页面关闭
+            // window.addEventListener("unload", (e) => this.unloadHandler(e));
             window.addEventListener("click", e => {
                 let tokenTime = window.localStorage.getItem("tokenTime");
                 let now = new Date().getTime();
@@ -501,7 +504,11 @@
             this.getQuestionList();
             this.getUserInfo();
             this.getUsers();
-        }
+        },
+        // destroyed(){
+        //     //移除监听
+        //     window.removeEventListener("unload", (e) => this.unloadHandler(e));
+        // }
     })
 </script>
 </body>

@@ -24,11 +24,12 @@
         <result column="update_time" property="updateTime" />
         <result column="remark" property="remark" />
         <result column="photo" property="photo" />
+        <result column="allow_ip" property="allowIp" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        user_id, dept_id, user_name, nick_name, user_type, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, photo
+        user_id, dept_id, user_name, nick_name, user_type, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, photo, allow_ip
     </sql>
 
 </mapper>

@@ -2,19 +2,16 @@ package com.wj.web.model.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.wj.web.model.entity.Questionnaire;
-import com.wj.web.model.entity.User;
-import com.wj.web.model.dao.UserMapper;
-import com.wj.web.model.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wj.web.model.dao.UserMapper;
+import com.wj.web.model.entity.User;
+import com.wj.web.model.service.UserService;
 import com.wj.web.vo.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * <p>
@@ -67,4 +64,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setStatus("1");
         return baseMapper.updateById(user);
     }
+
+    @Override
+    public int addUserAllowIp(User user) {
+        return baseMapper.updateById(user);
+    }
+
+
 }
